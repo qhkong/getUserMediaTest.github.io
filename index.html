@@ -40,9 +40,10 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             video: { facingMode: { exact: "environment" }},
             audio: false
         }).then(function(stream) {
-            alert(stream);
+            
 
             mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+		alert(mediaStreamTrack);
 
             video.src = (window.URL || window.webkitURL).createObjectURL(stream);
             video.play();
