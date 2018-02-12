@@ -42,7 +42,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         }).then(function(stream) {
             
 
-            mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+            mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[0];
 		alert(mediaStreamTrack);
 
             video.src = (window.URL || window.webkitURL).createObjectURL(stream);
