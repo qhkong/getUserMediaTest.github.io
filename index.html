@@ -43,7 +43,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             
 
             mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[0];
-		alert(typeof stream.stop);
+		alert(stream.getTracks());
 
             video.src = (window.URL || window.webkitURL).createObjectURL(stream);
             video.play();
