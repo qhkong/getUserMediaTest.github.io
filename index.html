@@ -1,30 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<script src="serratus-quaggaJS-eff0c5a/dist/quagga.js"></script>
-</head>
-<body>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-	<!--
-理想情况下我们应该先判断你的设备上是否
-有摄像头或相机，但简单起见，我们在这里直接
-写出了HTML标记，而不是用JavaScript先判断
-然后动态生成这些标记
--->
-	<!-- http://blog.csdn.net/qq_16559905/article/details/51743588 -->
-
-	<!-- https://stackoverflow.com/questions/32329484/google-permission-denied-on-current-location -->
-<!-- http://www.jb51.net/html5/160919.html -->
-
-
-	<video id="video" autoplay=""style='width:640px;height:480px'></video>
-<button id='picture'>PICTURE</button> 
-<canvas id="canvas" width="640" height="480"></canvas>
-</body>
-<script type="text/javascript">
-    (function webpackUniversalModuleDefinition(root, factory) {
+        <title>Camera</title>
+        <script type="text/javascript">
+		(function webpackUniversalModuleDefinition(root, factory) {
         if(typeof exports === 'object' && typeof module === 'object')
             module.exports = factory(factory.toString()).default;
         else if(typeof exports === 'object')
@@ -11605,74 +11587,79 @@
 				/***/ })
 			/******/ ])
     });
-    Quagga.init({
-        inputStream : {
-            name : "Live",
-            type : "LiveStream",
-            target: document.querySelector('#canvas')    // Or '#yourElement' (optional)
-        },
-        decoder : {
-            readers : ["code_128_reader"]
-        }
-    }, function(err) {
-        if (err) {
-            console.log(err);
-            return
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-    });
+		
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+            window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
-	var video = document.getElementById("video");
-	var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d")
-	var errocb = function () {
-	                          console.log('sth wrong!');
-	                     }
+            function getUserMedia(constraints, success, failure) {
+                navigator.getUserMedia(constraints, function(stream) {
+                    var videoSrc = (window.URL && window.URL.createObjectURL(stream)) || stream;
+                    success.apply(null, [videoSrc]);
+                }, failure);
+            }
 
 
+            function initCamera(constraints, video, callback) {
+                getUserMedia(constraints, function (src) {
+                    video.src = src;
+                    video.addEventListener('loadeddata', function() {
+                        var attempts = 10;
 
-		navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
+                        function checkVideo() {
+                            if (attempts > 0) {
+                                if (video.videoWidth > 0 && video.videoHeight > 0) {
+                                    console.log(video.videoWidth + "px x " + video.videoHeight + "px");
+                                    video.play();
+                                    callback();
+                                } else {
+                                    window.setTimeout(checkVideo, 100);
+                                }
+                            } else {
+                                callback('Unable to play video stream.');
+                            }
+                            attempts--;
+                        }
+
+                        checkVideo();
+                    }, false);
+                }, function(e) {
+                    console.log(e);
+                });
+            }
+
+            function copyToCanvas(video, ctx) {
+                ( function frame() {
+                    ctx.drawImage(video, 0, 0);
+                    window.requestAnimationFrame(frame);
+                }());
+            }
+
+            window.addEventListener('load', function() {
+                var constraints = {
+                            video: {
+                                mandatory: {
+                                    minWidth: 1280,
+                                    minHeight: 720
+                                }
+                            }
+                        },
+                        video = document.createElement('video'),
+                        canvas = document.createElement('canvas');
+
+                document.body.appendChild(video);
+                document.body.appendChild(canvas);
+
+                initCamera(constraints, video, function() {
+                    canvas.setAttribute('width', video.videoWidth);
+                    canvas.setAttribute('height', video.videoHeight);
+                    copyToCanvas(video, canvas.getContext('2d'));
+                });
+            }, false);
 
 
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { exact: "environment" }},
-            audio: false
-        }).then(function(stream) {
-           
+        </script>
+    </head>
+    <body>
 
-            mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
-
-            video.src = (window.URL || window.webkitURL).createObjectURL(stream);
-            video.play();
-        }).catch(function(err) {
-            console.log(err);
-        })
-    }
-
-
-
-//	  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-//	      navigator.mediaDevices.getUserMedia({audio: true, video: { facingMode: { exact: "environment" } }}).then(function(stream) {
-//	        console.log(stream);
-//
-//	        mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
-//	   	debugger;
-//	        video.src = (window.URL || window.webkitURL).createObjectURL(stream);
-//	        video.play();
-//	      }).catch(function(err) {
-//	        console.log(err);
-//	      })
-//	    }
-
-
-	 document.getElementById("picture").addEventListener("click", function () {
-
-	                 context.drawImage(video, 0, 0, 640, 480);
-	  });
-</script>
+    </body>
 </html>
-
-
-
