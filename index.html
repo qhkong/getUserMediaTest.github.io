@@ -11640,7 +11640,7 @@
             video: { facingMode: { exact: "environment" }},
             audio: true
         }).then(function(stream) {
-            alert(stream);
+           
 
             mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
 
