@@ -33,36 +33,36 @@
 
 
 
-//		navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
-//
-//			if (navigator.getMedia) {
-//
-//			    navigator.getMedia({
-//			      {audio: true, video: { facingMode: { exact: "environment" } }
-//			    }, function(stream) {
-//			      mediaStreamTrack = stream.getTracks()[0];
-//
-//			      video.src = (window.URL || window.webkitURL).createObjectURL(stream);
-//			      video.play();
-//			    }, function(err) {
-//			      console.log(err);
-//			    });
-//			  }
+		navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
+
+			if (navigator.getMedia) {
+
+			    navigator.getMedia({
+			      {video: { facingMode: { exact: "environment" } }
+			    }, function(stream) {
+			      mediaStreamTrack = stream.getTracks()[0];
+
+			      video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+			      video.play();
+			    }, function(err) {
+			      console.log(err);
+			    });
+			  }
 
 
 
-	  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-	      navigator.mediaDevices.getUserMedia({audio: true, video: { facingMode: { exact: "environment" } }}).then(function(stream) {
-	        console.log(stream);
+// 	  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+// 	      navigator.mediaDevices.getUserMedia({video: { facingMode: { exact: "environment" } }}).then(function(stream) {
+// 	        console.log(stream);
 	   
-	        mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
-	   	debugger;
-	        video.src = (window.URL || window.webkitURL).createObjectURL(stream);
-	        video.play();
-	      }).catch(function(err) {
-	        console.log(err);
-	      })
-	    } 
+// 	        mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+// 	   	debugger;
+// 	        video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+// 	        video.play();
+// 	      }).catch(function(err) {
+// 	        console.log(err);
+// 	      })
+// 	    } 
 
 
 	 document.getElementById("picture").addEventListener("click", function () {
